@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
@@ -19,72 +18,83 @@ namespace Cake\Collection\Iterator;
 use ArrayIterator;
 use Cake\Collection\Collection;
 use Cake\Collection\CollectionInterface;
-use CallbackFilterIterator;
-use Iterator;
 use Traversable;
 
 /**
- * Creates a filtered iterator from another iterator. The filtering is done by
- * passing a callback function to each of the elements and taking them out if
- * it does not return true.
+ * Creates an iterator from another iterator that will modify each of the values
+ * by converting them using a callback function.
  */
-class FilterIterator extends Collection
+class ReplaceIterator extends Collection
 {
     /**
-     * The callback used to filter the elements in this collection
+     * The callback function to be used to transform values
      *
      * @var callable
      */
     protected $_callback;
 
     /**
-     * Creates a filtered iterator using the callback to determine which items are
-     * accepted or rejected.
+     * A reference to the internal iterator this object is wrapping.
+     *
+     * @var \Traversable
+     */
+    protected $_innerIterator;
+
+    /**
+     * Creates an iterator from another iterator that will modify each of the values
+     * by converting them using a callback function.
      *
      * Each time the callback is executed it will receive the value of the element
      * in the current iteration, the key of the element and the passed $items iterator
      * as arguments, in that order.
      *
-     * @param \Traversable|array $items The items to be filtered.
+     * @param iterable $items The items to be filtered.
      * @param callable $callback Callback.
      */
     public function __construct($items, callable $callback)
     {
-        if (!$items instanceof Iterator) {
-            $items = new Collection($items);
-        }
-
         $this->_callback = $callback;
-        $wrapper = new CallbackFilterIterator($items, $callback);
-        parent::__construct($wrapper);
+        parent::__construct($items);
+        $this->_innerIterator = $this->getInnerIterator();
+    }
+
+    /**
+     * Returns the value returned by the callback after passing the current value in
+     * the iteration
+     *
+     * @return mixed
+     */
+    #[\ReturnTypeWillChange]
+    public function current()
+    {
+        $callback = $this->_callback;
+
+        return $callback(parent::current(), $this->key(), $this->_innerIterator);
     }
 
     /**
      * @inheritDoc
      */
-    public function unwrap(): Traversable
+    public function unwrap()
     {
-        /** @var \IteratorIterator $filter */
-        $filter = $this->getInnerIterator();
-        $iterator = $filter->getInnerIterator();
+        $iterator = $this->_innerIterator;
 
         if ($iterator instanceof CollectionInterface) {
             $iterator = $iterator->unwrap();
         }
 
         if (get_class($iterator) !== ArrayIterator::class) {
-            return $filter;
+            return $this;
         }
 
         // ArrayIterator can be traversed strictly.
         // Let's do that for performance gains
+
         $callback = $this->_callback;
         $res = [];
 
         foreach ($iterator as $k => $v) {
-            if ($callback($v, $k, $iterator)) {
-                $res[$k] = $v;
-            }
+            $res[$k] = $callback($v, $k, $iterator);
         }
 
         return new ArrayIterator($res);

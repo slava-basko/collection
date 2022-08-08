@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
@@ -59,7 +58,7 @@ class SortIterator extends Collection
      * @param int $type the type of comparison to perform, either SORT_STRING
      * SORT_NUMERIC or SORT_NATURAL
      */
-    public function __construct(iterable $items, $callback, int $dir = \SORT_DESC, int $type = \SORT_NUMERIC)
+    public function __construct($items, $callback, $dir = \SORT_DESC, $type = \SORT_NUMERIC)
     {
         if (!is_array($items)) {
             $items = iterator_to_array((new Collection($items))->unwrap(), false);
@@ -88,7 +87,7 @@ class SortIterator extends Collection
      *
      * @return \Traversable
      */
-    public function unwrap(): Traversable
+    public function unwrap()
     {
         return $this->getInnerIterator();
     }

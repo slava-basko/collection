@@ -1,7 +1,4 @@
-[![Total Downloads](https://img.shields.io/packagist/dt/cakephp/collection.svg?style=flat-square)](https://packagist.org/packages/cakephp/collection)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE.txt)
-
-# CakePHP Collection Library
+# CakePHP Collection Library port fot PHP 5
 
 The collection classes provide a set of tools to manipulate arrays or Traversable objects.
 If you have ever used underscore.js, you have an idea of what you can expect from the collection classes.
@@ -29,3 +26,14 @@ you have in your application as well.
 ## Documentation
 
 Please make sure you check the [official documentation](https://book.cakephp.org/4/en/core-libraries/collections.html)
+
+## How to run tests
+Install dependencies
+```shell
+docker run -v `pwd`:/var/www --rm feitosa/php55-with-composer composer install
+```
+
+Run tests
+```shell
+docker run -v `pwd`:/var/www --rm feitosa/php55-with-composer vendor/bin/phpunit
+```

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
@@ -45,8 +44,8 @@ class TreeIterator extends RecursiveIteratorIterator implements CollectionInterf
      */
     public function __construct(
         RecursiveIterator $items,
-        int $mode = RecursiveIteratorIterator::SELF_FIRST,
-        int $flags = 0
+        $mode = RecursiveIteratorIterator::SELF_FIRST,
+        $flags = 0
     ) {
         parent::__construct($items, $mode, $flags);
         $this->_mode = $mode;
@@ -82,9 +81,9 @@ class TreeIterator extends RecursiveIteratorIterator implements CollectionInterf
      *      });
      * ```
      *
-     * @param string|callable $valuePath The property to extract or a callable to return
+     * @param callable|string $valuePath The property to extract or a callable to return
      * the display value
-     * @param string|callable|null $keyPath The property to use as iteration key or a
+     * @param callable|string|null $keyPath The property to use as iteration key or a
      * callable returning the key value.
      * @param string $spacer The string to use for prefixing the values according to
      * their depth in the tree

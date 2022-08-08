@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
@@ -114,7 +113,7 @@ class MapReduce implements IteratorAggregate
      * of the bucket that was created during the mapping phase and third one is an
      * instance of this class.
      */
-    public function __construct(Traversable $data, callable $mapper, ?callable $reducer = null)
+    public function __construct(Traversable $data, callable $mapper, $reducer = null)
     {
         $this->_data = $data;
         $this->_mapper = $mapper;
@@ -127,7 +126,7 @@ class MapReduce implements IteratorAggregate
      *
      * @return \Traversable
      */
-    public function getIterator(): Traversable
+    public function getIterator()
     {
         if (!$this->_executed) {
             $this->_execute();
@@ -144,7 +143,7 @@ class MapReduce implements IteratorAggregate
      * @param mixed $bucket the name of the bucket where to put the record
      * @return void
      */
-    public function emitIntermediate($val, $bucket): void
+    public function emitIntermediate($val, $bucket)
     {
         $this->_intermediate[$bucket][] = $val;
     }
@@ -157,9 +156,9 @@ class MapReduce implements IteratorAggregate
      * @param mixed $key and optional key to assign to the value
      * @return void
      */
-    public function emit($val, $key = null): void
+    public function emit($val, $key = null)
     {
-        $this->_result[$key ?? $this->_counter] = $val;
+        $this->_result[$key ?: $this->_counter] = $val;
         $this->_counter++;
     }
 
@@ -172,7 +171,7 @@ class MapReduce implements IteratorAggregate
      * @throws \LogicException if emitIntermediate was called but no reducer function
      * was provided
      */
-    protected function _execute(): void
+    protected function _execute()
     {
         $mapper = $this->_mapper;
         foreach ($this->_data as $key => $val) {

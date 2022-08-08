@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
@@ -66,7 +65,7 @@ class UnfoldIterator extends IteratorIterator implements RecursiveIterator
      *
      * @return bool
      */
-    public function hasChildren(): bool
+    public function hasChildren()
     {
         return true;
     }

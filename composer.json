@@ -23,11 +23,15 @@
         "source": "https://github.com/cakephp/collection"
     },
     "require": {
-        "php": ">=7.2.0"
+        "php": "^5",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4"
     },
     "autoload": {
         "psr-4": {
-            "Cake\\Collection\\": "."
+            "Cake\\Collection\\": "./src"
         },
         "files": [
             "functions.php"

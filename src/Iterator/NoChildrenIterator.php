@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
@@ -31,7 +30,7 @@ class NoChildrenIterator extends Collection implements RecursiveIterator
      *
      * @return bool
      */
-    public function hasChildren(): bool
+    public function hasChildren()
     {
         return false;
     }

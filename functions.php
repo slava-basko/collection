@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
@@ -20,12 +19,12 @@ use Cake\Collection\CollectionInterface;
 
 if (!function_exists('collection')) {
     /**
-     * Returns a new Cake\Collection\Collection object wrapping the passed argument.
+     * Returns a new {@link \Cake\Collection\Collection} object wrapping the passed argument.
      *
      * @param iterable $items The items from which the collection will be built.
      * @return \Cake\Collection\Collection
      */
-    function collection(iterable $items): CollectionInterface
+    function collection($items)
     {
         return new Collection($items);
     }

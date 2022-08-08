@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
@@ -29,7 +28,7 @@ class NestIterator extends Collection implements RecursiveIterator
     /**
      * The name of the property that contains the nested items for each element
      *
-     * @var string|callable
+     * @var callable|string
      */
     protected $_nestKey;
 
@@ -37,10 +36,10 @@ class NestIterator extends Collection implements RecursiveIterator
      * Constructor
      *
      * @param iterable $items Collection items.
-     * @param string|callable $nestKey the property that contains the nested items
+     * @param callable|string $nestKey the property that contains the nested items
      * If a callable is passed, it should return the childrens for the passed item
      */
-    public function __construct(iterable $items, $nestKey)
+    public function __construct($items, $nestKey)
     {
         parent::__construct($items);
         $this->_nestKey = $nestKey;
@@ -64,7 +63,7 @@ class NestIterator extends Collection implements RecursiveIterator
      *
      * @return bool
      */
-    public function hasChildren(): bool
+    public function hasChildren()
     {
         $property = $this->_propertyExtractor($this->_nestKey);
         $children = $property($this->current());

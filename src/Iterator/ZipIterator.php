@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
@@ -69,7 +68,7 @@ class ZipIterator extends MultipleIterator implements CollectionInterface, Seria
      * @param array $sets The list of array or iterators to be zipped.
      * @param callable|null $callable The function to use for zipping the elements of each iterator.
      */
-    public function __construct(array $sets, ?callable $callable = null)
+    public function __construct(array $sets, $callable = null)
     {
         $sets = array_map(function ($items) {
             return (new Collection($items))->unwrap();
@@ -90,6 +89,7 @@ class ZipIterator extends MultipleIterator implements CollectionInterface, Seria
      *
      * @return array
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         if ($this->_callback === null) {
@@ -105,9 +105,19 @@ class ZipIterator extends MultipleIterator implements CollectionInterface, Seria
      *
      * @return string
      */
-    public function serialize(): string
+    public function serialize()
     {
         return serialize($this->_iterators);
+    }
+
+    /**
+     * Magic method used for serializing the iterator instance.
+     *
+     * @return array
+     */
+    public function __serialize()
+    {
+        return $this->_iterators;
     }
 
     /**
@@ -116,10 +126,26 @@ class ZipIterator extends MultipleIterator implements CollectionInterface, Seria
      * @param string $iterators The serialized iterators
      * @return void
      */
-    public function unserialize($iterators): void
+    public function unserialize($iterators)
     {
         parent::__construct(MultipleIterator::MIT_NEED_ALL | MultipleIterator::MIT_KEYS_NUMERIC);
         $this->_iterators = unserialize($iterators);
+        foreach ($this->_iterators as $it) {
+            $this->attachIterator($it);
+        }
+    }
+
+    /**
+     * Magic method used to rebuild the iterator instance.
+     *
+     * @param array $data Data array.
+     * @return void
+     */
+    public function __unserialize(array $data)
+    {
+        parent::__construct(MultipleIterator::MIT_NEED_ALL | MultipleIterator::MIT_KEYS_NUMERIC);
+
+        $this->_iterators = $data;
         foreach ($this->_iterators as $it) {
             $this->attachIterator($it);
         }

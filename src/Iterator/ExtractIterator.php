@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
@@ -52,11 +51,11 @@ class ExtractIterator extends Collection
      * ```
      *
      * @param iterable $items The list of values to iterate
-     * @param string|callable $path A dot separated path of column to follow
+     * @param callable|string $path A dot separated path of column to follow
      * so that the final one can be returned or a callable that will take care
      * of doing that.
      */
-    public function __construct(iterable $items, $path)
+    public function __construct($items, $path)
     {
         $this->_extractor = $this->_propertyExtractor($path);
         parent::__construct($items);
@@ -68,6 +67,7 @@ class ExtractIterator extends Collection
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         $extractor = $this->_extractor;
@@ -78,7 +78,7 @@ class ExtractIterator extends Collection
     /**
      * @inheritDoc
      */
-    public function unwrap(): Traversable
+    public function unwrap()
     {
         $iterator = $this->getInnerIterator();
 

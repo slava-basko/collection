@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
@@ -17,6 +16,7 @@ declare(strict_types=1);
 namespace Cake\Collection;
 
 use ArrayIterator;
+use Exception;
 use IteratorIterator;
 use Serializable;
 
@@ -34,7 +34,7 @@ class Collection extends IteratorIterator implements CollectionInterface, Serial
      * @param iterable $items Items.
      * @throws \InvalidArgumentException If passed incorrect type for items.
      */
-    public function __construct(iterable $items)
+    public function __construct($items)
     {
         if (is_array($items)) {
             $items = new ArrayIterator($items);
@@ -49,9 +49,19 @@ class Collection extends IteratorIterator implements CollectionInterface, Serial
      *
      * @return string
      */
-    public function serialize(): string
+    public function serialize()
     {
         return serialize($this->buffered());
+    }
+
+    /**
+     * Returns an array for serializing this of this object.
+     *
+     * @return array
+     */
+    public function __serialize()
+    {
+        return $this->buffered()->toArray();
     }
 
     /**
@@ -60,9 +70,20 @@ class Collection extends IteratorIterator implements CollectionInterface, Serial
      * @param string $collection The serialized collection
      * @return void
      */
-    public function unserialize($collection): void
+    public function unserialize($collection)
     {
         $this->__construct(unserialize($collection));
+    }
+
+    /**
+     * Rebuilds the Collection instance.
+     *
+     * @param array $data Data array.
+     * @return void
+     */
+    public function __unserialize(array $data)
+    {
+        $this->__construct($data);
     }
 
     /**
@@ -70,7 +91,7 @@ class Collection extends IteratorIterator implements CollectionInterface, Serial
      *
      * @return int
      */
-    public function count(): int
+    public function count()
     {
         $traversable = $this->optimizeUnwrap();
 
@@ -86,7 +107,7 @@ class Collection extends IteratorIterator implements CollectionInterface, Serial
      *
      * @return int
      */
-    public function countKeys(): int
+    public function countKeys()
     {
         return count($this->toArray());
     }
@@ -95,12 +116,18 @@ class Collection extends IteratorIterator implements CollectionInterface, Serial
      * Returns an array that can be used to describe the internal state of this
      * object.
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    public function __debugInfo(): array
+    public function __debugInfo()
     {
+        try {
+            $count = $this->count();
+        } catch (Exception $e) {
+            $count = 'An exception occurred while getting count';
+        }
+
         return [
-            'count' => $this->count(),
+            'count' => $count,
         ];
     }
 }
