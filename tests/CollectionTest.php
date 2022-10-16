@@ -2535,5 +2535,18 @@ class CollectionTest extends TestCase
 
         $unique = (new Collection($items))->unique('title');
         $this->assertCount(2, $unique);
+
+        $items2 = [
+            [
+                'category' => 'tag',
+                'title' => 'Cars',
+            ],
+            [
+                'category' => 'tag',
+                'title' => 'Tires',
+            ],
+        ];
+        $unique = (new Collection($items))->append($items2)->unique('title');
+        $this->assertCount(3, $unique);
     }
 }
