@@ -2548,5 +2548,31 @@ class CollectionTest extends TestCase
         ];
         $unique = (new Collection($items))->append($items2)->unique('title');
         $this->assertCount(3, $unique);
+        $this->assertEquals(
+            [
+                [
+                    'category' => 'tag',
+                    'title' => 'Cars',
+                ],
+                [
+                    'category' => 'tag',
+                    'title' => 'Parts',
+                ],
+                [
+                    'category' => 'tag',
+                    'title' => 'Tires',
+                ],
+            ],
+            (new Collection($items))->append($items2)->unique('title')->toList()
+        );
+
+        $this->assertCount(
+            3,
+            (new Collection([1, 2, 2, 3]))->unique()
+        );
+        $this->assertEquals(
+            [1, 2, 3],
+            (new Collection([1, 2, 2, 3]))->unique()->toList()
+        );
     }
 }

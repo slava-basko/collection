@@ -23,7 +23,11 @@ class UniqueIterator extends FilterIterator
     {
         return parent::__construct($items, function($item) use ($key) {
 
-            $value = isset($item[$key]) ? $item[$key] : null;
+            if (is_null($key)) {
+                $key = $value = $item;
+            } else {
+                $value = isset($item[$key]) ? $item[$key] : null;
+            }
 
             if(isset($this->_exists[$value])) {
                 return false;

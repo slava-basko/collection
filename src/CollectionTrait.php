@@ -86,9 +86,9 @@ trait CollectionTrait
      * @param $key
      * @return \Cake\Collection\Iterator\FilterIterator
      */
-    public function unique($key)
+    public function unique($key = null)
     {
-         return new UniqueIterator($this->unwrap(), $key);
+        return new UniqueIterator($this->unwrap(), $key);
     }
 
     /**
